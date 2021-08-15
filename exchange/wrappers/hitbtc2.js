@@ -25,7 +25,7 @@ const Trader = function(config) {
   }
   this.name = 'HitBTC';
   this.since = null;
-  
+
   this.balance;
   this.price;
   //this.interval = 3000;
@@ -35,7 +35,7 @@ const Trader = function(config) {
 
   this.ccxt = new Ccxt[exchange]({apiKey: this.key, secret: this.secret, uid:this.username, password: this.passphrase});
   this.exchangeName = exchange;
-  
+
   //Prefetch market
   var retFlag = false;
   (async () => {
@@ -46,7 +46,7 @@ const Trader = function(config) {
         console.log('error loading markets : ' + this.name + '-' + this.exchangeName , e);
      }
      retFlag = true;
-     
+
      this.market = _.find(Trader.getCapabilities().markets, (p) => {
        return _.first(p.pair) === this.currency && _.last(p.pair) === this.asset;
      });
@@ -82,7 +82,7 @@ AuthenticationError -> Abort
 InvalidNonce -> Retry
 InsufficientFunds -> Retry
 InvalidOrder -> Abort
-OrderNotFound -> Abort                                                                             
+OrderNotFound -> Abort
 OrderNotCached -> Abort
 CancelPending -> Abort
 NetworkError -> Retry
@@ -97,43 +97,43 @@ Trader.prototype.processError = function(funcName, error) {
   //Handle error here
   if(error instanceof ccxtError.ExchangeError       ){
     console.log(`[ccxt-${this.exchangeName}] (${funcName}) returned an error, retrying: ${error.message}`);
-    return new Errors.RetryError('[ccxt-'+ this.exchangeName + '] ' + error.message);  	
+    return new Errors.RetryError('[ccxt-'+ this.exchangeName + '] ' + error.message);
   }else if(error instanceof ccxtError.NotSupported        ){
     console.log(`[ccxt-${this.exchangeName}] (${funcName}) returned an irrecoverable error: ${error.message}`);
-    return new Errors.AbortError('[ccxt-'+ this.exchangeName + '] ' + error.message);  	
+    return new Errors.AbortError('[ccxt-'+ this.exchangeName + '] ' + error.message);
   }else if(error instanceof ccxtError.AuthenticationError ){
     console.log(`[ccxt-${this.exchangeName}] (${funcName}) returned an irrecoverable error: ${error.message}`);
-    return new Errors.AbortError('[ccxt-'+ this.exchangeName + '] ' + error.message);  	
+    return new Errors.AbortError('[ccxt-'+ this.exchangeName + '] ' + error.message);
   }else if(error instanceof ccxtError.InvalidNonce        ){
     console.log(`[ccxt-${this.exchangeName}] (${funcName}) returned an error, retrying: ${error.message}`);
-    return new Errors.RetryError('[ccxt-'+ this.exchangeName + '] ' + error.message);  	
+    return new Errors.RetryError('[ccxt-'+ this.exchangeName + '] ' + error.message);
   }else if(error instanceof ccxtError.InsufficientFunds   ){
     console.log(`[ccxt-${this.exchangeName}] (${funcName}) returned an error, retrying: ${error.message}`);
-    return new Errors.RetryError('[ccxt-'+ this.exchangeName + '] ' + error.message);  	
+    return new Errors.RetryError('[ccxt-'+ this.exchangeName + '] ' + error.message);
   }else if(error instanceof ccxtError.InvalidOrder        ){
     console.log(`[ccxt-${this.exchangeName}] (${funcName}) returned an irrecoverable error: ${error.message}`);
-    return new Errors.AbortError('[ccxt-'+ this.exchangeName + '] ' + error.message);  	
-  }else if(error instanceof ccxtError.OrderNotFound       ){  
+    return new Errors.AbortError('[ccxt-'+ this.exchangeName + '] ' + error.message);
+  }else if(error instanceof ccxtError.OrderNotFound       ){
     console.log(`[ccxt-${this.exchangeName}] (${funcName}) returned an irrecoverable error: ${error.message}`);
-    return new Errors.AbortError('[ccxt-'+ this.exchangeName + '] ' + error.message);  																   
+    return new Errors.AbortError('[ccxt-'+ this.exchangeName + '] ' + error.message);
   }else if(error instanceof ccxtError.OrderNotCached      ){
     console.log(`[ccxt-${this.exchangeName}] (${funcName}) returned an irrecoverable error: ${error.message}`);
-    return new Errors.AbortError('[ccxt-'+ this.exchangeName + '] ' + error.message);  	
+    return new Errors.AbortError('[ccxt-'+ this.exchangeName + '] ' + error.message);
   }else if(error instanceof ccxtError.CancelPending       ){
     console.log(`[ccxt-${this.exchangeName}] (${funcName}) returned an irrecoverable error: ${error.message}`);
-    return new Errors.AbortError('[ccxt-'+ this.exchangeName + '] ' + error.message);  	
+    return new Errors.AbortError('[ccxt-'+ this.exchangeName + '] ' + error.message);
   }else if(error instanceof ccxtError.NetworkError        ){
     console.log(`[ccxt-${this.exchangeName}] (${funcName}) returned an error, retrying: ${error.message}`);
-    return new Errors.RetryError('[ccxt-'+ this.exchangeName + '] ' + error.message);  	
+    return new Errors.RetryError('[ccxt-'+ this.exchangeName + '] ' + error.message);
   }else if(error instanceof ccxtError.DDoSProtection      ){
     console.log(`[ccxt-${this.exchangeName}] (${funcName}) returned an error, retrying: ${error.message}`);
-    return new Errors.RetryError('[ccxt-'+ this.exchangeName + '] ' + error.message); 	
+    return new Errors.RetryError('[ccxt-'+ this.exchangeName + '] ' + error.message);
   }else if(error instanceof ccxtError.RequestTimeout      ){
     console.log(`[ccxt-${this.exchangeName}] (${funcName}) returned an error, retrying: ${error.message}`);
-    return new Errors.RetryError('[ccxt-'+ this.exchangeName + '] ' + error.message);  	
+    return new Errors.RetryError('[ccxt-'+ this.exchangeName + '] ' + error.message);
   }else if(error instanceof ccxtError.ExchangeNotAvailable){
     console.log(`[ccxt-${this.exchangeName}] (${funcName}) returned an error, retrying: ${error.message}`);
-    return new Errors.RetryError('[ccxt-'+ this.exchangeName + '] ' + error.message);    
+    return new Errors.RetryError('[ccxt-'+ this.exchangeName + '] ' + error.message);
   }else{
 	console.log(`[ccxt-${this.exchangeName}] (${funcName}) returned an irrecoverable error: ${error.message}`);
 	return new Errors.AbortError('[ccxt-'+ this.exchangeName + '] ' + error.message);
@@ -158,7 +158,7 @@ Trader.prototype.handleResponse = function(funcName, callback) {
 Trader.prototype.getTrades = function(since, callback, descending) {
   var firstFetch = !!since;
   var processAttempt = function(ccxt, pair, since, cb) {
-     
+
      (async () => {
 	   try{
 		   var data = await ccxt.fetchTrades(pair, since);
@@ -168,7 +168,7 @@ Trader.prototype.getTrades = function(since, callback, descending) {
        }
      }) ();
   };
-  
+
   var processResult = function (err, data){
     if(err) return callback(err);
 
@@ -180,7 +180,7 @@ Trader.prototype.getTrades = function(since, callback, descending) {
 	     }else{
 			uid = trade.id;
 	     }
-	     
+
 	     return {
 			tid: uid,
 			amount: +trade.amount,
@@ -201,10 +201,10 @@ Trader.prototype.getTrades = function(since, callback, descending) {
 	  retValue = result; //There is only one trade or one timestamp
 	}
 	callback(null, retValue);
-  };	
-  
+  };
+
   let handler = (cb) => processAttempt(this.ccxt, this.pair, since, this.handleResponse('getTrades', cb));
-  //util.retryCustom(retryForever, _.bind(handler, this), _.bind(processResult, this));  	
+  //util.retryCustom(retryForever, _.bind(handler, this), _.bind(processResult, this));
   retry(null, _.bind(handler, this), _.bind(processResult, this));
 }
 
@@ -212,24 +212,24 @@ Trader.prototype.getTrades = function(since, callback, descending) {
 Trader.prototype.getPortfolio = function(callback) {
 
   var processAttempt = function(ccxt, cb) {
-     
+
      (async () => {
        try{
           data = await ccxt.fetchBalance();
-          cb(undefined, data);  
+          cb(undefined, data);
        }catch(e){
 		  console.log(e);
           cb(e);
        }
 	 }) ();
   };
-  
+
   var processResult = function (err, data){
 	 if(err) return callback(err);
 
 	 var assetAmount = data[this.asset]['free'];
 	 var currencyAmount = data[this.currency]['free'];
-     
+
 	 if(!_.isNumber(assetAmount) || _.isNaN(assetAmount)) {
        console.log(`[ccxt-${this.exchangeName}] did not return portfolio for ${this.asset}, assuming 0.`);
        assetAmount = 0;
@@ -239,23 +239,23 @@ Trader.prototype.getPortfolio = function(callback) {
        console.log(`[ccxt-${this.exchangeName}] did not return portfolio for ${this.currency}, assuming 0.`);
        currencyAmount = 0;
      }
-     
+
 	 var portfolio = [
 	 { name: this.asset, amount: assetAmount },
 	 { name: this.currency, amount: currencyAmount }
 	 ];
-     
+
 	 console.log('[ccxt-' + this.exchangeName + '] (getPortfolio) portfolio:', portfolio);
-	 callback(undefined, portfolio);     
+	 callback(undefined, portfolio);
   };
-  
+
   let handler = (cb) => processAttempt(this.ccxt, this.handleResponse('getPortfolio', cb));
-  retry(null, _.bind(handler, this), _.bind(processResult, this));  
+  retry(null, _.bind(handler, this), _.bind(processResult, this));
 }
 
 
 Trader.prototype.getFee = function(callback) {
-   //getFee is WIP ccxt side 
+   //getFee is WIP ccxt side
    //See https://github.com/ccxt/ccxt/issues/640
    /*
    try {
@@ -274,7 +274,7 @@ Trader.prototype.getFee = function(callback) {
 
 Trader.prototype.getTicker = function(callback) {
   var processAttempt = function(ccxt, pair, cb) {
-	  
+
      (async () => {
        try{
           data = await ccxt.fetchTicker(pair);
@@ -285,10 +285,10 @@ Trader.prototype.getTicker = function(callback) {
        }
 	 }) ();
   }
-  
+
   var processResult = function (err, data){
 	 if(err) return callback(err);
-	 
+
    //console.log('ask', parseFloat(data['ask']), 'bid', parseFloat(data['bid']));
 	 //console.log('[ccxt-' + this.exchangeName + '] (getTicker) ask', parseFloat(data['ask']), 'bid', parseFloat(data['bid']));
    callback(undefined, {
@@ -296,7 +296,7 @@ Trader.prototype.getTicker = function(callback) {
      ask: parseFloat(data['ask']),
    });
   }
-  
+
   let handler = (cb) => processAttempt(this.ccxt, this.pair, this.handleResponse('getTicker', cb));
   retry(null, _.bind(handler, this), _.bind(processResult, this));
 }
@@ -378,8 +378,8 @@ Trader.prototype.roundPrice = function(price) {
 Trader.prototype.buy = function(amount, price, callback) {
 
    var processAttempt = function(ccxt, roundAmount, roundPrice, pair, cb) {
-     
-     (async () => {          
+
+     (async () => {
         try{
           data = await ccxt.createLimitBuyOrder (pair, roundAmount, roundPrice);
           cb(undefined, data);
@@ -390,16 +390,16 @@ Trader.prototype.buy = function(amount, price, callback) {
         }
      }) ();
   };
-  
+
   var processResult = function (err, data){
     if(err) return callback(err);
-    
+
     var txid = data['id'];
     console.log('[ccxt-' + this.exchangeName + '] (buy) added order with txid:', txid);
 
     callback(undefined, txid);
-  };	  
-	  
+  };
+
   let handler = (cb) => processAttempt(this.ccxt, amount, price, this.pair, this.handleResponse('buy', cb));
   retry(null, _.bind(handler, this), _.bind(processResult, this));
 }
@@ -417,18 +417,18 @@ Trader.prototype.sell = function(amount, price, callback) {
           }
      }) ();
   };
-  
+
   var processResult = function (err, data){
   if(err) return callback(err);
-    
+
   var txid = data['id'];
 	if(_.isUndefined(txid))
 		txid = 0; //Order id is undefined, assuming order is already filled. See https://github.com/ccxt/ccxt/issues/660
     console.log('[ccxt-' + this.exchangeName + '] (sell) added order with txid:', txid);
 
     callback(undefined, txid);
-  };	  
-	  
+  };
+
   let handler = (cb) => processAttempt(this.ccxt, amount, price, this.pair, this.handleResponse('sell', cb));
   //util.retryCustom(retryCritical, _.bind(handler, this), _.bind(processResult, this));
   retry(null, _.bind(handler, this), _.bind(processResult, this));
@@ -437,7 +437,7 @@ Trader.prototype.sell = function(amount, price, callback) {
 
 Trader.prototype.getOrder = function(order, callback) {
   var processAttempt = function(ccxt, pair, id, cb) {
-     
+
      (async () => {
 	   try{
 		   if(ccxt['has']['fetchMyTrades'] === true){
@@ -451,36 +451,36 @@ Trader.prototype.getOrder = function(order, callback) {
 		   }else{
 			   var order = await ccxt.fetchOrder(id, pair);
 			   cb(undefined, order);
-		   }		   
+		   }
        }catch(e){
 		  console.log(e);
 		  if(e instanceof ccxtError.OrderNotCached)
 			cb(undefined, {'timestamp':0, 'price':0, 'amount':0});	//If no order found, assuming already cancelled or filled.
 		  else
-			cb(e);	      
+			cb(e);
        }
      }) ();
   };
-  
+
   var processResult = function (err, data){
     if(err) return callback(err);
-	
+
 	console.log('[ccxt-' + this.exchangeName + '] (getOrder) result', data);
 	var date = moment(data['timestamp']);
     var price = data['price'];
     var amount = data['amount'];
-    
-    callback(undefined, {price, amount, date});	
-  };	  
-	  
+
+    callback(undefined, {price, amount, date});
+  };
+
   let handler = (cb) => processAttempt(this.ccxt, this.pair, order, this.handleResponse('getOrder', cb));
-  retry(null, _.bind(handler, this), _.bind(processResult, this)); 	
+  retry(null, _.bind(handler, this), _.bind(processResult, this));
 }
 
 
 Trader.prototype.checkOrder = function(order, callback) {
    var processAttempt = function(ccxt, order, pair, cb) {
-     
+
      (async () => {
 	   try{
 		   var data = await ccxt.fetchOrder(order, pair);
@@ -491,14 +491,14 @@ Trader.prototype.checkOrder = function(order, callback) {
 			cb(undefined, {'status':'closed'});	//If no order found, then order is cancelled or filled.
 		  else{
 			cb(e);
-		  }	      
+		  }
        }
      }) ();
   };
-  
+
   var processResult = function (err, data){
     if(err) return callback(err);
-	
+
 	  console.log('[ccxt-' + this.exchangeName + '] (checkOrder) result', data);
     callback(undefined, {
       executed: data['amount'] === data['filled'],
@@ -514,7 +514,7 @@ Trader.prototype.checkOrder = function(order, callback) {
 
 Trader.prototype.cancelOrder = function(order, callback) {
   var processAttempt = function(ccxt, order, cb) {
-     
+
      (async () => {
       try {
         var data = await ccxt.cancelOrder(order);
@@ -527,11 +527,11 @@ Trader.prototype.cancelOrder = function(order, callback) {
         else{
           console.log('Attention!! Err on cancelOrder');
           cb(e);
-        }  	  
+        }
       }
     }) ();
   };
-  
+
   var processResult = function (err, bol, data){
 	  if(err) {
       console.log('Error happened on cancelOrder');
@@ -539,9 +539,9 @@ Trader.prototype.cancelOrder = function(order, callback) {
     }
 
 	  //console.log('[ccxt-' + this.exchangeName + '] (cancelOrder) result', data);
-    callback(undefined, bol, data);	
-  };	
-  
+    callback(undefined, bol, data);
+  };
+
   let handler = (cb) => processAttempt(this.ccxt, order, this.handleResponse('cancelOrder', cb));
   retry(null, handler, processResult);
 }
@@ -549,9 +549,9 @@ Trader.prototype.cancelOrder = function(order, callback) {
 
 //Dynamic getCapabilities - takes a while
 Trader.getCapabilities = function () {
-    var ccxtSlug = 'hitbtc2';
+    var ccxtSlug = 'hitbtc';
     var retFlag = false;
-                                      
+
     if(_.isUndefined(ccxtSlug)){
        var ret = [];
        var ccxtExchanges = Ccxt.exchanges;
@@ -561,18 +561,18 @@ Trader.getCapabilities = function () {
           try {
             Trader = new Ccxt[exchange]();
           } catch (e) {
-            console.log(e); 
+            console.log(e);
             return;
           }
-          
+
           var trader = Trader.describe();
           var capabilities = [];
-          
+
           var arrPair = [];
           var arrAssets = [];
           var arrCurrencies = []
           var markets = null;
-          
+
           if(Trader.hasPublicAPI){ //solve _1broker issue (don't have public API and atm API key is not entered).
              retFlag = false;
              (async () => {
@@ -587,26 +587,26 @@ Trader.getCapabilities = function () {
              deasync.loopWhile(function(){return !retFlag;});
              arrPair = [];
              if(markets !== null){
-                _.each(markets, market => {  
+                _.each(markets, market => {
                    try{
                       var amountMin = market.limits.amount.min;
                    }catch(e){
                       var amountMin = 1e8;
                    }
-                   arrPair.push({pair: [market.quote, market.base], minimalOrder: { amount: amountMin, unit: 'asset'}});  
+                   arrPair.push({pair: [market.quote, market.base], minimalOrder: { amount: amountMin, unit: 'asset'}});
                    if(arrAssets.toString().search(market.base) == -1){
                       arrAssets.push(market.base);
                    }
                    if(arrCurrencies.toString().search(market.quote) == -1){
                       arrCurrencies.push(market.quote);
                    }
-                                         
+
                 });
              }
           }
           if(markets !== null){
              capabilities = {
-                name : trader.id, 
+                name : trader.id,
                 slug: trader.id,
                 currencies: arrCurrencies.sort(),
                 assets: arrAssets.sort(),
@@ -635,18 +635,18 @@ Trader.getCapabilities = function () {
        try {
          Trader = new Ccxt[ccxtSlug]();
        } catch (e) {
-         console.log(e); 
+         console.log(e);
          return;
        }
-       
+
        var trader = Trader.describe();
        var capabilities = [];
-       
+
        var arrPair = [];
        var arrAssets = [];
        var arrCurrencies = []
        var markets = null;
-       
+
        if(Trader.hasPublicAPI){ //solve _1broker issue (don't have public API and atm API key is not entered).
           retFlag = false;
           (async () => {
@@ -661,26 +661,26 @@ Trader.getCapabilities = function () {
           deasync.loopWhile(function(){return !retFlag;});
           arrPair = [];
           if(markets !== null){
-             _.each(markets, market => {  
+             _.each(markets, market => {
                 try{
                    var amountMin = market.limits.amount.min;
                 }catch(e){
                    var amountMin = 1e8;
                 }
-                arrPair.push({pair: [market.quote, market.base], minimalOrder: { amount: amountMin, unit: 'asset'}});  
+                arrPair.push({pair: [market.quote, market.base], minimalOrder: { amount: amountMin, unit: 'asset'}});
                 if(arrAssets.toString().search(market.base) == -1){
                    arrAssets.push(market.base);
                 }
                 if(arrCurrencies.toString().search(market.quote) == -1){
                    arrCurrencies.push(market.quote);
                 }
-                                      
+
              });
           }
        }
        if(markets !== null){
           capabilities = {
-             name : trader.id, 
+             name : trader.id,
              slug: 'hitbtc2',
              currencies: arrCurrencies.sort(),
              assets: arrAssets.sort(),
@@ -697,7 +697,7 @@ Trader.getCapabilities = function () {
              providesHistory: 'date',
              providesFullHistory: Trader.fetchTrades ? true : false,
              tradable: Trader.hasPrivateAPI ? true : false,
-             gekkoBroker: 0.6,  
+             gekkoBroker: 0.6,
           };
        };
 

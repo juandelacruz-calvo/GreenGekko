@@ -181,14 +181,14 @@ Trader.prototype.getTrades = function(since, callback, descending) {
 };
 
 
-Trader.prototype.getOrderbook = function(callback) {  
+Trader.prototype.getOrderbook = function(callback) {
   const handle = (err, ob) => {
     if (err) return callback(err);
 
     var obStats = {};
     //_.each(ob.result[this.pair], function(trade) {
     //}, this);
-    if (this.exchange != undefined) obStats.exchange = this.exchange;
+    if (this.exchange !== undefined) obStats.exchange = this.exchange;
     obStats.pair = this.asset + this.currency;
     let pair = ob;
     obStats.asks = pair.asks;
@@ -208,10 +208,10 @@ Trader.prototype.getPortfolio = function(callback) {
     if (err) return callback(err);
 
     const findAsset = item => item.asset === this.asset;
-    const assetAmount = parseFloat(_.find(data.balances, findAsset).free);
+    let assetAmount = parseFloat(_.find(data.balances, findAsset).free);
 
     const findCurrency = item => item.asset === this.currency;
-    const currencyAmount = parseFloat(_.find(data.balances, findCurrency).free);
+    let currencyAmount = parseFloat(_.find(data.balances, findCurrency).free);
 
     if (!_.isNumber(assetAmount) || _.isNaN(assetAmount)) {
       assetAmount = 0;
@@ -350,8 +350,8 @@ Trader.prototype.addOrder = function(tradeType, amount, price, callback) {
   const reqData = {
     symbol: this.pair,
     side: tradeType.toUpperCase(),
-    type: 'LIMIT',
-    timeInForce: 'GTC',
+    type: 'MARKET',
+    // timeInForce: 'GTC',
     quantity: amount,
     price: price,
     timestamp: new Date().getTime()

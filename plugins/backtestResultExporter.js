@@ -12,11 +12,11 @@
 // * batch the candles into bigger ones. The result is a dynamic view from 1min
 // * candles up to 1day candles, depending on your zoom factor.
 // * Indicators are displayed 1:1, no data aggregation applies. Keep in mind to
-// * adjust the chart zoom factor while viewing, so it matches to your strategy 
+// * adjust the chart zoom factor while viewing, so it matches to your strategy
 // * candle size.
 // *
 // **********************************************************************************
-// * Add the following settings to your config file and adjust as needed:  
+// * Add the following settings to your config file and adjust as needed:
 /*
 config.backtestResultExporter = {
   enabled: true,
@@ -239,7 +239,7 @@ BacktestResultExporter.prototype.finalize = function(done) {
   if(config.backtestResultExporter.data.stratCandles)
     backtest.stratCandles = this.stratCandles;
 
-  if(config.backtestResultExporter.data.chartData == true || config.backtestResultExporter.data.chartData === undefined) {
+  if(config.backtestResultExporter.data.chartData === true || config.backtestResultExporter.data.chartData === undefined) {
     let end = moment(this.performanceReport.endTime);
     let endMinus1Week = (end.subtract(1, 'week')).unix();
     let endMinus1Month = (end.subtract(2, 'week')).unix();
